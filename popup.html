@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TDM_WEB_DEV_EXT</title>
+  <link rel="stylesheet" href="popup.css" />
+
+
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-icon">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+        </svg>
+      </span>
+      <span class="brand-name">TDM_WEB_DEV_EXT</span>
+      <span class="badge" id="countBadge">0</span>
+      <span class="paused-chip hidden" id="pausedChip">PAUSED</span>
+      <span class="mocks-chip hidden" id="mocksChip">0 MOCK</span>
+    </div>
+    <div class="actions">
+      <button class="btn" id="autoScrollBtn" title="Toggle auto-scroll to newest">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14"/><path d="M5 12l7 7 7-7"/>
+        </svg>
+        Auto-scroll
+      </button>
+      <button class="btn" id="pauseBtn" title="Pause capture">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+        </svg>
+        Pause
+      </button>
+      <button class="btn" id="mocksBtn" title="Manage mock rules">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+        Mocks
+      </button>
+      <button class="btn" id="headerRulesBtn" title="Manage Header Rewriter (ModHeader) rules">
+        ⚡ Headers
+      </button>
+      <button class="btn accent" id="auditBtn" title="Run AI Security & Vulnerability Audit on captured traffic">
+        🛡️ Security Audit
+      </button>
+      <button class="btn accent" id="aiBtn" title="Open AI assistant for this page">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/>
+          <path d="M19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7L19 16z"/>
+        </svg>
+        AI Assistant
+      </button>
+      <button class="btn" id="harBtn" title="Export as HAR (HTTP Archive)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14,2 14,8 20,8"/>
+          <path d="M8 13h8M8 17h5"/>
+        </svg>
+        HAR
+      </button>
+      <button class="btn" id="diffBtn" title="Compare two selected requests side-by-side">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+        Diff
+      </button>
+      <button class="btn" id="postmanBtn" title="Export as Postman collection">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14,2 14,8 20,8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        Postman
+      </button>
+      <button class="btn" id="exportBtn" title="Export as JSON">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7,10 12,15 17,10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Export
+      </button>
+      <button class="btn danger" id="clearBtn" title="Clear all">Clear</button>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="10" cy="10" r="7"/><path d="M21 21l-5-5"/>
+      </svg>
+      <input id="searchBox" type="text" placeholder="Search URL, method, status, target…" autocomplete="off" />
+    </div>
+    <select id="methodFilter" class="filter">
+      <option value="">All methods</option>
+      <option>GET</option><option>POST</option><option>PUT</option>
+      <option>PATCH</option><option>DELETE</option><option>HEAD</option>
+      <option>WS</option><option>LOAD</option><option>CLICK</option><option>ERR</option>
+    </select>
+    <select id="statusFilter" class="filter">
+      <option value="">All status</option>
+      <option value="2">2xx</option><option value="3">3xx</option>
+      <option value="4">4xx</option><option value="5">5xx</option>
+      <option value="pending">Pending</option>
+    </select>
+    <select id="typeFilter" class="filter">
+      <option value="">All types</option>
+      <option value="fetch">Fetch</option>
+      <option value="xhr">XHR</option>
+      <option value="websocket">WebSocket</option>
+      <option value="dom-event">DOM Event</option>
+      <option value="error">Error</option>
+    </select>
+  </div>
+
+  <main class="content">
+    <section class="list-pane" id="listPane">
+      <div id="requestsList" class="requests-list"></div>
+    </section>
+
+    <div class="resizer" id="resizer"></div>
+
+    <section class="detail-pane">
+      <div id="detailEmpty" class="empty">
+        <div class="empty-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22,12 16,12 14,15 10,15 8,12 2,12"/>
+            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
+          </svg>
+        </div>
+        <p>No request selected</p>
+        <small>Interact with the page — requests and events will appear here</small>
+      </div>
+
+      <div id="detailView" class="detail-view hidden">
+        <div class="detail-head">
+          <span id="detailMethod" class="method-badge"></span>
+          <h2 id="detailUrl" title=""></h2>
+          <div class="detail-actions" id="detailActions"></div>
+        </div>
+        <div class="tabs" id="tabs">
+          <button class="tab active" data-tab="request">Request</button>
+          <button class="tab" data-tab="response">Response</button>
+          <button class="tab" data-tab="jsonTree">JSON Tree</button>
+          <button class="tab" data-tab="graphql">GraphQL</button>
+          <button class="tab" data-tab="aiChat">🤖 AI Chat Assistant</button>
+          <button class="tab" data-tab="waterfall">Waterfall</button>
+          <button class="tab" data-tab="runner">Runner</button>
+          <button class="tab" data-tab="storage">Storage</button>
+          <button class="tab" data-tab="messages">Messages</button>
+          <button class="tab" data-tab="curl">cURL</button>
+          <button class="tab" data-tab="fetch">Fetch</button>
+          <button class="tab" data-tab="python">Python</button>
+          <button class="tab" data-tab="node">Node.js</button>
+          <button class="tab" data-tab="go">Go</button>
+          <button class="tab" data-tab="rust">Rust</button>
+        </div>
+        <div class="tab-panels" id="tabPanels"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Edit/Replay modal -->
+  <div class="modal-backdrop hidden" id="editModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title" id="modalTitle">Edit &amp; Replay</span>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="field-row">
+          <label>Method</label>
+          <select id="editMethod" class="filter" style="width:110px">
+            <option>GET</option><option>POST</option><option>PUT</option>
+            <option>PATCH</option><option>DELETE</option><option>HEAD</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label>URL</label>
+          <input type="text" id="editUrl" class="field-input" placeholder="https://…" />
+        </div>
+        <div class="field-row">
+          <label>Headers</label>
+          <textarea id="editHeaders" class="field-textarea" rows="4" placeholder='{"Content-Type": "application/json"}'></textarea>
+        </div>
+        <div class="field-row">
+          <label>Body</label>
+          <textarea id="editBody" class="field-textarea" rows="5" placeholder="Request body (JSON or plain text)"></textarea>
+        </div>
+        <div class="field-row">
+          <label><input type="checkbox" id="editInTab" checked /> Replay inside Tab (Preserves page session &amp; cookies)</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="modalCancel">Cancel</button>
+        <button class="btn accent" id="modalSend">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/>
+          </svg>
+          Send
+        </button>
+      </div>
+      <div id="replayResult" class="replay-result hidden"></div>
+    </div>
+  </div>
+
+  <!-- Mocks management modal -->
+  <div class="modal-backdrop hidden" id="mocksModal">
+    <div class="modal mocks-modal">
+      <div class="modal-header">
+        <span class="modal-title">Mock Rules Interceptor</span>
+        <button class="modal-close" id="mocksClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="mocksList" class="mocks-list"></div>
+        <div class="mocks-divider">Add New Advanced Mock</div>
+        <div class="field-row" style="display:flex; gap:8px;">
+          <div style="flex:1;">
+            <label>HTTP Method</label>
+            <select id="mockMethod" class="filter" style="width:100%;">
+              <option value="ALL">ALL (Any)</option>
+              <option value="GET">GET</option><option value="POST">POST</option>
+              <option value="PUT">PUT</option><option value="PATCH">PATCH</option>
+              <option value="DELETE">DELETE</option>
+            </select>
+          </div>
+          <div style="flex:1;">
+            <label>Match Type</label>
+            <select id="mockMatchType" class="filter" style="width:100%;">
+              <option value="contains">Contains Substring</option>
+              <option value="exact">Exact Match</option>
+              <option value="regex">Regex Pattern</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <label>URL Pattern <span class="label-hint">— exact, substring or regex pattern</span></label>
+          <input type="text" id="mockPattern" class="field-input" placeholder="https://api.example.com/.* or /v1/users" />
+        </div>
+        <div class="mock-status-row" style="display:flex; gap:8px;">
+          <div class="field-row" style="width:90px">
+            <label>Status</label>
+            <input type="number" id="mockStatus" class="field-input" value="200" min="100" max="599" />
+          </div>
+          <div class="field-row" style="flex:1">
+            <label>Status Text</label>
+            <input type="text" id="mockStatusText" class="field-input" value="OK" />
+          </div>
+          <div class="field-row" style="width:110px">
+            <label>Delay (ms)</label>
+            <input type="number" id="mockDelay" class="field-input" value="0" min="0" max="10000" placeholder="0" />
+          </div>
+        </div>
+        <div class="field-row">
+          <label>Custom Response Headers (JSON)</label>
+          <textarea id="mockHeaders" class="field-textarea" rows="2" placeholder='{"content-type": "application/json", "x-mocked-by": "TDM"}'></textarea>
+        </div>
+        <div class="field-row">
+          <label>Response Body</label>
+          <textarea id="mockBody" class="field-textarea" rows="4" placeholder='{"mocked": true}'></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="mocksCancel">Close</button>
+        <button class="btn accent" id="mockSave">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14"/><path d="M5 12l7 7 7-7"/>
+          </svg>
+          Add Mock
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side-by-Side Diff Modal -->
+  <div class="modal-backdrop hidden" id="diffModal">
+    <div class="modal diff-modal" style="max-width: 900px; width: 95%;">
+      <div class="modal-header">
+        <span class="modal-title">Side-by-Side Request &amp; Response Comparison</span>
+        <button class="modal-close" id="diffClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="field-row" style="display:flex; gap:12px;">
+          <div style="flex:1;">
+            <label>Request A (Base)</label>
+            <select id="diffReqA" class="filter" style="width:100%;"></select>
+          </div>
+          <div style="flex:1;">
+            <label>Request B (Compare)</label>
+            <select id="diffReqB" class="filter" style="width:100%;"></select>
+          </div>
+        </div>
+        <div id="diffViewContainer" class="diff-view-container" style="margin-top:12px; display:flex; gap:12px;">
+          <div class="diff-pane" id="diffPaneA" style="flex:1; background:rgba(10,16,28,0.8); border:1px solid rgba(70,130,240,0.3); border-radius:8px; padding:10px; overflow-x:auto;"></div>
+          <div class="diff-pane" id="diffPaneB" style="flex:1; background:rgba(10,16,28,0.8); border:1px solid rgba(70,130,240,0.3); border-radius:8px; padding:10px; overflow-x:auto;"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="diffCloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header Rewriter (ModHeader) Modal -->
+  <div class="modal-backdrop hidden" id="headerRulesModal">
+    <div class="modal header-rules-modal" style="max-width: 720px; width: 95%;">
+      <div class="modal-header">
+        <span class="modal-title">⚡ Header Rewriter Engine (ModHeader)</span>
+        <button class="modal-close" id="headerRulesClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="headerRulesList" class="header-rules-list"></div>
+        <div class="mocks-divider">Add New Header Rule</div>
+        <div class="field-row" style="display:flex; gap:8px;">
+          <div style="flex:1;">
+            <label>Action</label>
+            <select id="headerRuleAction" class="filter" style="width:100%;">
+              <option value="add">Add / Set Header</option>
+              <option value="remove">Remove Header</option>
+            </select>
+          </div>
+          <div style="flex:1;">
+            <label>HTTP Method</label>
+            <select id="headerRuleMethod" class="filter" style="width:100%;">
+              <option value="ALL">ALL (Any)</option>
+              <option value="GET">GET</option><option value="POST">POST</option>
+              <option value="PUT">PUT</option><option value="PATCH">PATCH</option>
+              <option value="DELETE">DELETE</option>
+            </select>
+          </div>
+          <div style="flex:1;">
+            <label>Match Type</label>
+            <select id="headerRuleMatchType" class="filter" style="width:100%;">
+              <option value="contains">Contains Substring</option>
+              <option value="exact">Exact Match</option>
+              <option value="regex">Regex Pattern</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <label>URL Pattern <span class="label-hint">— matching requests will apply this rule</span></label>
+          <input type="text" id="headerRulePattern" class="field-input" placeholder="https://api.example.com/.* or /v1/" />
+        </div>
+        <div class="field-row" style="display:flex; gap:8px;">
+          <div style="flex:1;">
+            <label>Header Name</label>
+            <input type="text" id="headerRuleName" class="field-input" placeholder="Authorization or X-Custom-Env" />
+          </div>
+          <div style="flex:1;">
+            <label>Header Value</label>
+            <input type="text" id="headerRuleValue" class="field-input" placeholder="Bearer eyJhbGci..." />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="headerRulesCancel">Close</button>
+        <button class="btn accent" id="headerRuleSave">Save Header Rule</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Security Audit Report Modal -->
+  <div class="modal-backdrop hidden" id="auditModal">
+    <div class="modal audit-modal" style="max-width: 840px; width: 95%;">
+      <div class="modal-header">
+        <span class="modal-title">🛡️ AI Network Security &amp; OWASP Vulnerability Audit</span>
+        <button class="modal-close" id="auditClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="auditContent" class="audit-content" style="font-size:12px; line-height:1.6; color:var(--text);">
+          <div class="empty"><p>Click 'Start Security Audit' to scan all captured traffic with AI.</p></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="auditCloseBtn">Close</button>
+        <button class="btn accent" id="startAuditBtn">🛡️ Start Security Audit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="popup.js"></script>
+  <script src="chatbot-widget.js"></script>
+</body>
+</html>
+
+

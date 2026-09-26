@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "TDM_WEB_DEV_EXT",
+  "version": "2.0",
+  "description": "Capture fetch, XHR & WebSocket traffic. Copy ready-to-run cURL for Postman.",
+  "permissions": ["storage", "activeTab", "scripting", "contextMenus", "cookies"],
+  "host_permissions": ["<all_urls>"],
+  "devtools_page": "devtools.html",
+  "icons": {
+    "16": "anime_icon.ico",
+    "48": "anime_icon.ico",
+    "128": "anime_icon.ico"
+  },
+  "action": {
+    "default_title": "TDM_WEB_DEV_EXT",
+    "default_icon": "anime_icon.ico"
+  },
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["injected.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "world": "ISOLATED"
+    }
+  ]
+}
